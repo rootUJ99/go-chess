@@ -6,8 +6,31 @@ import (
 	tl "github.com/JoelOtter/termloop"
 )
 
+type board [8][8]block 
+
+type block struct {
+	color string 
+	player player
+	row int
+	col int
+}
+
+type player struct {
+	color string
+	name string
+}
+
+func constructBoard(){
+	
+	var drawnBoard board	
+	for i, j := range drawnBoard{
+		fmt.Println(i, j)	
+	}
+}
+
 func main() {
 	fmt.Println("hello")
+	constructBoard()
 	game := tl.NewGame()
 	level := tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorBlue,
