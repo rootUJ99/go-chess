@@ -42,17 +42,16 @@ func (g Game) constructBoard() board{
 	return g.drawnBoard
 }
 
-func (g Game) paintBoard() {
-	for rowIndex, row := range g.drawnBoard {
-		/* y:= rowIndex * 6 */
-		y:= rowIndex * 12
+func (g Game) paintBoard(gboard board) {
+	for rowIndex, row := range gboard {
+		y:= rowIndex * 6
 		for colIndex, col:= range row {
-			/* x:= colIndex * 12 */
-			x:= colIndex * 6
+		 x:= colIndex * 12
 			g.level.AddEntity(tl.NewRectangle(x, y, 12, 6, col.color))
-			g.game.Screen().SetLevel(g.level)
 		} 
 	}
+	g.game.Screen().SetLevel(g.level)
+
 }
 
 
@@ -65,38 +64,7 @@ func main() {
 			Ch: '/',
 		}),
 	}	
-	g.constructBoard()
-	g.paintBoard()
-	// fmt.Println(reflect.TypeOf(tl.ColorBlack))
-	// hrPtr := 0
-	// vrPtr := 0
-	// for i := 0; i <= 63; i++ {
-	// 	block := i + 1
-	// 	x := vrPtr * 12
-	// 	y := hrPtr * 6
-	// 	vrPtr += 1
-	// 	color := tl.ColorBlack
-	//
-	// 	if int(hrPtr%2) == 0 {
-	// 		color = tl.ColorWhite
-	// 		if int(vrPtr%2) == 0 {
-	// 			color = tl.ColorBlack
-	// 		}
-	// 	} else {
-	// 		color = tl.ColorBlack
-	// 		if int(vrPtr%2) == 0 {
-	// 			color = tl.ColorWhite
-	// 		}
-	// 	}
-	// 	if block%8 == 0 {
-	// 		hrPtr += 1
-	// 		vrPtr = 0
-	// 	}
-	//
-	// 	fmt.Println(x,y)
-	// 	g.level.AddEntity(tl.NewRectangle(x, y, 12, 6, color))
-	// 	g.game.Screen().SetLevel(g.level)
-	// }
-	fmt.Println(len(g.level.Entities))
+	gboard:=g.constructBoard()
+	g.paintBoard(gboard)
 	g.game.Start()
 }
