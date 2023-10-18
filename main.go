@@ -22,28 +22,29 @@ type player struct {
 }
 
 type Game struct {
-	drawnBoard board
+	drawnBoard *board
 	game *tl.Game
 	level *tl.BaseLevel
 }
 
-func (g Game) constructBoard() board{
-	for rowIndex, row := range g.drawnBoard{
+func constructBoard() board{
+	var drawnBoard board
+	for rowIndex, row := range drawnBoard{
 		for colIndex, _ := range row{
 			if (colIndex+1+rowIndex) % 2 == 0{
-				g.drawnBoard[rowIndex][colIndex].color = tl.ColorBlack
+				drawnBoard[rowIndex][colIndex].color = tl.ColorBlack
 			} else {
-				g.drawnBoard[rowIndex][colIndex].color = tl.ColorWhite
+				drawnBoard[rowIndex][colIndex].color = tl.ColorWhite
 			}
-			g.drawnBoard[rowIndex][colIndex].row = rowIndex
-			g.drawnBoard[rowIndex][colIndex].col = colIndex
+			drawnBoard[rowIndex][colIndex].row = rowIndex
+			drawnBoard[rowIndex][colIndex].col = colIndex
 		}
 	}
-	return g.drawnBoard
+	return drawnBoard
 }
 
-func (g Game) paintBoard(gboard board) {
-	for rowIndex, row := range gboard {
+func (g Game) paintBoard() {
+	for rowIndex, row := range g.drawnBoard {
 		y:= rowIndex * 6
 		for colIndex, col:= range row {
 		 x:= colIndex * 12
@@ -51,20 +52,20 @@ func (g Game) paintBoard(gboard board) {
 		} 
 	}
 	g.game.Screen().SetLevel(g.level)
-
+	g.game.Start()
 }
 
 
 func main() {
 	fmt.Println("Starting the game!!")
+	drawnBorad:= constructBoard()
 	g := Game{
+		drawnBoard: &drawnBorad,
 		game: tl.NewGame(),
 		level: tl.NewBaseLevel(tl.Cell{
 			Bg: tl.ColorBlue,
 			Ch: '/',
 		}),
 	}	
-	gboard:=g.constructBoard()
-	g.paintBoard(gboard)
-	g.game.Start()
+	g.paintBoard()
 }
