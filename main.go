@@ -39,6 +39,7 @@ type GotyaWB struct {
 	Hatti2 string `json:"hatti2"`
 	Ghoda2 string `json:"ghoda2"`
 	Unta2 string `json:"unta2"`
+	Pyada string `json:"pyada"`
 }
 
 type Gotya struct {
@@ -76,7 +77,6 @@ func (g Game) paintBoard() {
 			}
 			switch rowIndex {
 			case 0:
-				fmt.Println("im here inside", colIndex, g.gotya.White.Hatti2)
 				switch colIndex {
 				case 0: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti1, gotiColor, col.color))
 				case 1: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda1, gotiColor, col.color))
@@ -87,14 +87,16 @@ func (g Game) paintBoard() {
 				case 6: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda2, gotiColor, col.color))
 				case 7: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti2, gotiColor, col.color))
 				}
-
+			case 1:	g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Pyada, gotiColor, col.color))
+			case 6:	g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Pyada, gotiColor, col.color))
+				
 			case 7:
 				switch colIndex {
 				case 0: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Hatti1, gotiColor, col.color))
 				case 1: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Ghoda1, gotiColor, col.color))
 				case 2: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Unta1, gotiColor, col.color))
-				case 3: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Vajeer, gotiColor, col.color))
-				case 4: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Raja, gotiColor, col.color))
+				case 3: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Raja, gotiColor, col.color))
+				case 4: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Vajeer, gotiColor, col.color))
 				case 5: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Unta2, gotiColor, col.color))
 				case 6: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Ghoda2, gotiColor, col.color))
 				case 7: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Hatti2, gotiColor, col.color))
