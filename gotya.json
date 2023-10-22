@@ -1,0 +1,27 @@
+{
+	"black": {
+		"hatti1": "hatti",
+		"ghoda1": "ghoda",
+		"unta1": "unta",
+		"vajeer": "vajeer",
+		"raja": "raja",
+		"hatti2": "hatti",
+		"ghoda2": "ghoda",
+		"unta2": "unta",
+		"vajeer": "vajeer",
+		"pyada": "pyada"
+	},
+	"white": {
+		"hatti1": "hatti",
+		"ghoda1": "ghoda",
+		"unta1": "unta",
+		"vajeer": "vajeer",
+		"raja": "raja",
+		"hatti2": "hatti",
+		"ghoda2": "ghoda",
+		"unta2": "unta",
+		"vajeer": "vajeer",
+		"pyada": "pyada"
+	}
+}
+
