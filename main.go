@@ -20,7 +20,7 @@ type block struct {
 
 type player struct {
 	color tl.Attr 
-	name string
+	name string 
 }
 
 type Game struct {
@@ -29,6 +29,19 @@ type Game struct {
 	level *tl.BaseLevel
 	gotya Gotya
 }
+
+const (
+	Hatti1="hatti1"
+	Ghoda1="ghoda1"
+	Unta1="unta1"
+	Vajeer="vajeer"
+	Raja="raja"
+	Hatti2="hatti2"
+	Ghoda2="ghoda2"
+	Unta2="unta2"
+	Pyada="pyada"
+
+)
 
 type GotyaWB struct {
 	Hatti1 string `json:"hatti1"`
@@ -63,6 +76,12 @@ func constructBoard() board{
 	return drawnBoard
 }
 
+func setInitialPosition(drawnBoard *board) {
+	for _, row := range drawnBoard {
+		fmt.Println(row)
+	}
+}
+
 func (g Game) paintBoard() {
 	for rowIndex, row := range g.drawnBoard {
 		y:= rowIndex * 6
@@ -87,8 +106,14 @@ func (g Game) paintBoard() {
 				case 6: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda2, gotiColor, col.color))
 				case 7: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti2, gotiColor, col.color))
 				}
-			case 1:	g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Pyada, gotiColor, col.color))
-			case 6:	g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Pyada, gotiColor, col.color))
+			case 1:	{
+				g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Pyada, gotiColor, col.color)) 
+				g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Pyada
+			}
+			case 6:	{
+				g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Pyada, gotiColor, col.color))
+				g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Pyada
+				}
 				
 			case 7:
 				switch colIndex {
@@ -107,6 +132,7 @@ func (g Game) paintBoard() {
 	}
 	g.game.Screen().SetLevel(g.level)
 	g.game.Start()
+	setInitialPosition(g.drawnBoard)
 }
 
 
