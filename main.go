@@ -29,19 +29,33 @@ type Game struct {
 	level *tl.BaseLevel
 	gotya Gotya
 }
-
+type GotyaEnum int8
 const (
-	Hatti1="hatti1"
-	Ghoda1="ghoda1"
-	Unta1="unta1"
-	Vajeer="vajeer"
-	Raja="raja"
-	Hatti2="hatti2"
-	Ghoda2="ghoda2"
-	Unta2="unta2"
-	Pyada="pyada"
+	Hatti1 GotyaEnum = iota
+	Ghoda1
+	Unta1
+	Vajeer
+	Raja
+	Hatti2
+	Ghoda2
+	Unta2
+	Pyada
 
 )
+
+func (g GotyaEnum) String() string {
+	switch g{
+	case Hatti1: return "hatti1"
+	case Ghoda1: return "ghoda1"
+	case Unta1: return "unta1"
+	case Vajeer: return "vajeer"
+	case Raja: return "raja"
+	case Hatti2: return "hatti2"
+	case Ghoda2: return "ghoda2"
+	case Unta2: return "unta2"
+	}
+	return "pyada"	
+}
 
 type GotyaWB struct {
 	Hatti1 string `json:"hatti1"`
@@ -81,7 +95,7 @@ func setInitialPosition(drawnBoard *board) {
 		fmt.Println(row)
 	}
 }
-
+//
 func (g Game) paintBoard() {
 	for rowIndex, row := range g.drawnBoard {
 		y:= rowIndex * 6
@@ -97,14 +111,37 @@ func (g Game) paintBoard() {
 			switch rowIndex {
 			case 0:
 				switch colIndex {
-				case 0: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti1, gotiColor, col.color))
-				case 1: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda1, gotiColor, col.color))
-				case 2: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Unta1, gotiColor, col.color))
-				case 3: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Vajeer, gotiColor, col.color))
-				case 4: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Raja, gotiColor, col.color))
-				case 5: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Unta2, gotiColor, col.color))
-				case 6: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda2, gotiColor, col.color))
-				case 7: g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti2, gotiColor, col.color))
+				case 0: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti1, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Hatti1
+					}
+				case 1: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda1, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Ghoda1
+					}
+				case 2: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Unta1, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Unta1
+					}
+				case 3: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Vajeer, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Vajeer
+					}
+				case 4: {g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Raja, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Raja
+					}
+				case 5: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Unta2, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Unta2
+					}
+				case 6: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda2, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Ghoda2
+					}
+				case 7: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti2, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Hatti2
+					}
 				}
 			case 1:	{
 				g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Pyada, gotiColor, col.color)) 
@@ -117,22 +154,45 @@ func (g Game) paintBoard() {
 				
 			case 7:
 				switch colIndex {
-				case 0: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Hatti1, gotiColor, col.color))
-				case 1: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Ghoda1, gotiColor, col.color))
-				case 2: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Unta1, gotiColor, col.color))
-				case 3: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Raja, gotiColor, col.color))
-				case 4: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Vajeer, gotiColor, col.color))
-				case 5: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Unta2, gotiColor, col.color))
-				case 6: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Ghoda2, gotiColor, col.color))
-				case 7: g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Hatti2, gotiColor, col.color))
+				case 0: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Hatti1, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Hatti1
+					}
+				case 1: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Ghoda1, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Ghoda1
+					}
+				case 2: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Unta1, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Unta1
+					}
+				case 3: {g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Raja, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Raja
+					}
+				case 4: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Vajeer, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Vajeer
+					}
+				case 5: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Unta2, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Unta2
+					}
+				case 6: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Ghoda2, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Ghoda2
+					}
+				case 7: {
+					g.level.AddEntity(tl.NewText(x,y, g.gotya.Black.Hatti2, gotiColor, col.color))
+					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.Black.Hatti2
+					}
 				}
 
 			} 
 		}
 	}
+	setInitialPosition(g.drawnBoard)
 	g.game.Screen().SetLevel(g.level)
 	g.game.Start()
-	setInitialPosition(g.drawnBoard)
 }
 
 
