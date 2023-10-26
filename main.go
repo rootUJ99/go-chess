@@ -96,6 +96,9 @@ func setInitialPosition(drawnBoard *board) {
 	}
 }
 //
+func (g Game) movePlayer( goti string) {
+		
+}
 func (g Game) paintBoard() {
 	for rowIndex, row := range g.drawnBoard {
 		y:= rowIndex * 6
@@ -113,7 +116,8 @@ func (g Game) paintBoard() {
 				switch colIndex {
 				case 0: {
 					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Hatti1, gotiColor, col.color))
-					g.drawnBoard[rowIndex][colIndex].player.name = g.gotya.White.Hatti1
+					col.player.name = g.gotya.White.Hatti1
+					g.movePlayer(g.gotya.White.Hatti1)
 					}
 				case 1: {
 					g.level.AddEntity(tl.NewText(x,y, g.gotya.White.Ghoda1, gotiColor, col.color))
