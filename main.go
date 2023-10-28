@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-
+	"reflect"
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -30,65 +30,7 @@ type Game struct {
 	game *tl.Game
 	level *tl.BaseLevel
 	gotya Gotya
-	gotiw WGotyaEnum
-	gotib BGotyaEnum
 }
-type BGotyaEnum int16
-const (
-	BHatti1 BGotyaEnum = 1 << iota
-	BGhoda1
-	BUnta1
-	BVajeer
-	BRaja
-	BHatti2
-	BGhoda2
-	BUnta2
-	BPyada
-
-)
-
-func (g BGotyaEnum) String() string {
-	switch g{
-	case BHatti1: return "bhatti1"
-	case BGhoda1: return "bghoda1"
-	case BUnta1: return "bunta1"
-	case BVajeer: return "bvajeer"
-	case BRaja: return "braja"
-	case BHatti2: return "bhatti2"
-	case BGhoda2: return "bghoda2"
-	case BUnta2: return "bunta2"
-	}
-	return "wpyada"	
-}
-
-type WGotyaEnum int16
-const (
-	WHatti1 WGotyaEnum = 1 << iota
-	WGhoda1
-	WUnta1
-	WVajeer
-	WRaja
-	WHatti2
-	WGhoda2
-	WUnta2
-	WPyada
-
-)
-
-func (g WGotyaEnum) String() string {
-	switch g{
-	case WHatti1: return "whatti1"
-	case WGhoda1: return "wghoda1"
-	case WUnta1: return "wunta1"
-	case WVajeer: return "wvajeer"
-	case WRaja: return "wraja"
-	case WHatti2: return "whatti2"
-	case WGhoda2: return "wghoda2"
-	case WUnta2: return "wunta2"
-	}
-	return "wpyada"	
-}
-
 type GotyaWB struct {
 	Hatti1 string `json:"hatti1"`
 	Ghoda1 string `json:"ghoda1"`
@@ -99,6 +41,31 @@ type GotyaWB struct {
 	Ghoda2 string `json:"ghoda2"`
 	Unta2 string `json:"unta2"`
 	Pyada string `json:"pyada"`
+}
+
+func structIterator() []string{
+	fields := reflect.VisibleFields(reflect.TypeOf(struct{ GotyaWB }{}))
+	var res []string
+	for index, field := range fields {
+		if index == 0 {
+			continue
+		} 
+		res = append(res, fmt.Sprintf(field.Name)) 
+	}
+	return res
+}
+
+func getAttr(obj interface{}, fieldName string) reflect.Value {
+	pointToStruct := reflect.ValueOf(obj) // addressable
+	curStruct := pointToStruct.Elem()
+	if curStruct.Kind() != reflect.Struct {
+		panic("not struct")
+	}
+	curField := curStruct.FieldByName(fieldName) // type: reflect.Value
+	if !curField.IsValid() {
+		panic("not found:" + fieldName)
+	}
+	return curField
 }
 
 type Gotya struct {
@@ -152,66 +119,22 @@ func (g Game) paintBoard() {
 			}
 			switch rowIndex {
 			case 0:
-				switch colIndex {
-				case 0: {
-					g.movePlayer(g.gotya.White.Hatti1, col, gotiColor)
-					}
-				case 1: {
-					g.movePlayer(g.gotya.White.Ghoda1, col, gotiColor)
-					}
-				case 2: {
-					g.movePlayer(g.gotya.White.Unta1, col, gotiColor)
-					}
-				case 3: {
-					g.movePlayer(g.gotya.White.Vajeer, col, gotiColor)
-					}
-				case 4: {
-					g.movePlayer(g.gotya.White.Raja, col, gotiColor)
-					}
-				case 5: {
-					g.movePlayer(g.gotya.White.Unta2, col, gotiColor)
-					}
-				case 6: {
-					g.movePlayer(g.gotya.White.Ghoda2, col, gotiColor)
-					}
-				case 7: {
-					g.movePlayer(g.gotya.White.Hatti2, col, gotiColor)
-					}
-				}
+				val:=getAttr(&g.gotya.White,structIterator()[colIndex]) 
+				finalVal:= val.Interface().(string)
+				g.movePlayer(finalVal, col, gotiColor)
+
 			case 1:	{
 				g.movePlayer(g.gotya.White.Pyada, col, gotiColor)
-			}
+				}
 			case 6:	{
 				g.movePlayer(g.gotya.White.Pyada, col, gotiColor)
 				}
-				
+
 			case 7:
-				switch colIndex {
-				case 0: {
-					g.movePlayer(g.gotya.Black.Hatti1, col, gotiColor)
-					}
-				case 1: {
-					g.movePlayer(g.gotya.Black.Ghoda1, col, gotiColor)
-					}
-				case 2: {
-					g.movePlayer(g.gotya.Black.Unta1, col, gotiColor)
-					}
-				case 3: {
-					g.movePlayer(g.gotya.Black.Raja, col, gotiColor)
-					}
-				case 4: {
-					g.movePlayer(g.gotya.Black.Vajeer, col, gotiColor)
-					}
-				case 5: {
-					g.movePlayer(g.gotya.Black.Unta2, col, gotiColor)
-					}
-				case 6: {
-					g.movePlayer(g.gotya.Black.Ghoda2, col, gotiColor)
-					}
-				case 7: {
-					g.movePlayer(g.gotya.Black.Hatti2, col, gotiColor)
-					}
-				}
+				val:=getAttr(&g.gotya.Black,structIterator()[colIndex]) 
+				finalVal:= val.Interface().(string)
+				g.movePlayer(finalVal, col, gotiColor)
+
 
 			} 
 		}
@@ -231,12 +154,9 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(gotya)
-	var gotyaW WGotyaEnum
-	var gotyaB BGotyaEnum
-	for i:=WHatti1; i <= WPyada; i= i<<1 {
-		fmt.Println("does this even works", i)
-	}
+	for _, r:= range structIterator(){
+		fmt.Println("struct", r)
+	} 
 	g := Game{
 		drawnBoard: &drawnBorad,
 		game: tl.NewGame(),
@@ -245,8 +165,6 @@ func main() {
 			Ch: '/',
 		}),
 		gotya: gotya,
-		gotiw: gotyaW,
-		gotib: gotyaB,
 	}	
 	g.paintBoard()
 }
