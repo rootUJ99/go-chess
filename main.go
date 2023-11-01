@@ -37,20 +37,21 @@ type GotyaWB struct {
 	Unta1 string `json:"unta1"`
 	Vajeer string `json:"vajeer"`
 	Raja string `json:"raja"`
-	Hatti2 string `json:"hatti2"`
 	Ghoda2 string `json:"ghoda2"`
 	Unta2 string `json:"unta2"`
+	Hatti2 string `json:"hatti2"`
 	Pyada string `json:"pyada"`
 }
 
-func structIterator() []string{
-	fields := reflect.VisibleFields(reflect.TypeOf(struct{ GotyaWB }{}))
+func getSructFields(obj interface{}) []string{
+	objStruct := reflect.TypeOf(obj)
+	if objStruct.Kind() != reflect.Struct {
+		panic("not struct")
+	}
+	visible := reflect.VisibleFields(objStruct)
 	var res []string
-	for index, field := range fields {
-		if index == 0 {
-			continue
-		} 
-		res = append(res, fmt.Sprintf(field.Name)) 
+	for _, field :=range visible {
+		res = append(res, fmt.Sprintf(field.Name))
 	}
 	return res
 }
@@ -104,6 +105,7 @@ func (g Game) movePlayer(goti string, currBlock block, goticolor tl.Attr) {
 
 }
 func (g Game) paintBoard() {
+	gotyaWhiteBlack := getSructFields(GotyaWB{}) 
 	for rowIndex, row := range g.drawnBoard {
 		y:= rowIndex * 6
 		for colIndex, col:= range row {
@@ -119,7 +121,7 @@ func (g Game) paintBoard() {
 			}
 			switch rowIndex {
 			case 0:
-				val:=getAttr(&g.gotya.White,structIterator()[colIndex]) 
+				val:=getAttr(&g.gotya.White,gotyaWhiteBlack[colIndex]) 
 				finalVal:= val.Interface().(string)
 				g.movePlayer(finalVal, col, gotiColor)
 
@@ -131,7 +133,7 @@ func (g Game) paintBoard() {
 				}
 
 			case 7:
-				val:=getAttr(&g.gotya.Black,structIterator()[colIndex]) 
+				val:=getAttr(&g.gotya.Black,gotyaWhiteBlack[colIndex]) 
 				finalVal:= val.Interface().(string)
 				g.movePlayer(finalVal, col, gotiColor)
 
@@ -154,9 +156,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	for _, r:= range structIterator(){
-		fmt.Println("struct", r)
-	} 
 	g := Game{
 		drawnBoard: &drawnBorad,
 		game: tl.NewGame(),
