@@ -43,28 +43,28 @@ type GotyaWB struct {
 	Pyada string `json:"pyada"`
 }
 
-func getSructFields(obj interface{}) []string{
+func getSructFields(obj interface{}) ([]string, error){
 	objStruct := reflect.TypeOf(obj)
 	if objStruct.Kind() != reflect.Struct {
-		panic("not struct")
+		return nil, fmt.Errorf("Please provide struct")
 	}
 	visible := reflect.VisibleFields(objStruct)
 	var res []string
 	for _, field :=range visible {
 		res = append(res, fmt.Sprintf(field.Name))
 	}
-	return res
+	return res, nil 
 }
 
 func getAttr(obj interface{}, fieldName string) reflect.Value {
 	pointToStruct := reflect.ValueOf(obj) // addressable
 	curStruct := pointToStruct.Elem()
 	if curStruct.Kind() != reflect.Struct {
-		panic("not struct")
+		panic("Please provide struct")
 	}
 	curField := curStruct.FieldByName(fieldName) // type: reflect.Value
 	if !curField.IsValid() {
-		panic("not found:" + fieldName)
+		panic("field does not exist:"+fieldName)
 	}
 	return curField
 }
@@ -105,7 +105,10 @@ func (g Game) movePlayer(goti string, currBlock block, goticolor tl.Attr) {
 
 }
 func (g Game) paintBoard() {
-	gotyaWhiteBlack := getSructFields(GotyaWB{}) 
+	gotyaWhiteBlack, err := getSructFields(GotyaWB{}) 
+	if(err != nil) {
+		panic(err)
+	}
 	for rowIndex, row := range g.drawnBoard {
 		y:= rowIndex * 6
 		for colIndex, col:= range row {
