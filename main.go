@@ -23,6 +23,7 @@ type block struct {
 type player struct {
 	color tl.Attr 
 	name string 
+	ent *tl.Entity
 }
 
 type Game struct {
@@ -100,7 +101,11 @@ func (g Game) movePlayer(goti string, currBlock block, goticolor tl.Attr) {
 	g.drawnBoard[currBlock.row][currBlock.col].player.name = goti
 	x:=g.drawnBoard[currBlock.row][currBlock.col].X 
 	y:=g.drawnBoard[currBlock.row][currBlock.col].Y 
-	g.level.AddEntity(tl.NewText(x,y, goti, goticolor, currBlock.color))
+	/* ent:=tl.NewText(x,y, goti, goticolor, currBlock.color)  */
+	player := tl.NewEntity(x, y, 1, 1)
+	// Set the character at position (0, 0) on the entity.
+	player.SetCell(0, 0, &tl.Cell{Fg: goticolor, Ch: '옷'})
+	g.level.AddEntity(player)
 
 
 }
