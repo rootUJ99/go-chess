@@ -13,14 +13,14 @@ type board [8][8]block
 
 type block struct {
 	color tl.Attr 
-	player player
+	player Player
 	row int
 	col int
 	X int
 	Y int
 }
 
-type player struct {
+type Player struct {
 	color tl.Attr 
 	name string 
 	ent *tl.Entity
@@ -75,6 +75,15 @@ type Gotya struct {
 	Black GotyaWB `json:"black"` 
 }
 
+func (p *Player) Tick(event tl.Event){
+	if event.Type == tl.EventMouse{
+		switch event.Key {
+			case  tl.MouseLeft:
+			fmt.Println("mouse is clicking mouse is clicking")
+		}
+	}	
+}
+
 func constructBoard() board{
 	var drawnBoard board
 	for rowIndex, row := range drawnBoard{
@@ -104,7 +113,8 @@ func (g Game) movePlayer(goti string, currBlock block, goticolor tl.Attr) {
 	/* ent:=tl.NewText(x,y, goti, goticolor, currBlock.color)  */
 	player := tl.NewEntity(x, y, 1, 1)
 	// Set the character at position (0, 0) on the entity.
-	player.SetCell(0, 0, &tl.Cell{Fg: goticolor, Ch: '옷'})
+player.SetCell(0, 0, &tl.Cell{Fg: goticolor, Ch: '옷'})
+	g.drawnBoard[currBlock.row][currBlock.col].player.ent = player 
 	g.level.AddEntity(player)
 
 
