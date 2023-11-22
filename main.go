@@ -82,6 +82,12 @@ func (p *Player) Tick(event tl.Event){
 			fmt.Println("mouse is clicking mouse is clicking")
 		}
 	}	
+	if event.Type == tl.EventType(tl.KeyEnter){
+		switch event.Key {
+			case  tl.MouseLeft:
+			fmt.Println("mouse is clicking mouse is enter clicking")
+		}
+	}	
 }
 
 func constructBoard() board{
